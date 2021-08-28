@@ -4,6 +4,7 @@
             {
                 "name": "Kabeer",
                 "avatar": "https://www.pngjoy.com/pngl/136/2750635_gray-circle-login-user-icon-png-transparent-png.png",
+                "counter": 0,
                 "messages": [
                     {
                         "id": "kabeer",
@@ -26,6 +27,7 @@
             {
                 "name": "Alameen",
                 "avatar": "https://www.pngjoy.com/pngl/136/2750635_gray-circle-login-user-icon-png-transparent-png.png",
+                "counter": 0,
                 "messages": [
                     {
                         "id": "alameen",
@@ -68,6 +70,7 @@
             {
                 "name": "Razeem",
                 "avatar": "https://www.pngjoy.com/pngl/136/2750635_gray-circle-login-user-icon-png-transparent-png.png",
+                "counter": 0,
                 "messages": [
                     {
                         "id": "razeem",
@@ -90,6 +93,7 @@
             {
                 "name": "Sunil",
                 "avatar": "https://www.pngjoy.com/pngl/136/2750635_gray-circle-login-user-icon-png-transparent-png.png",
+                "counter": 0,
                 "messages": [
                     {
                         "id": "sunil",

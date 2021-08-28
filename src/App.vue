@@ -8,9 +8,10 @@
             <span class="user-name">Shakir</span> 
              <!-- listing of users  -->
             <ul>
-              <li v-for = "(user,i) in users" :key="user" @click= "showChat(user.name, i)" :class= "{'active': i === activeItemIndex}">
+              <li v-for = "(user,i) in users" :key="user" @click= "showChat(user, i)" :class= "{'active': i === activeItemIndex}">
                 <img v-bind:src= "user.avatar" alt="" class="avatar">
                 <span>{{user.name}}</span>
+                <div class="counter" v-if = "user.counter">{{user.counter}}</div>
               </li>
             </ul>
             <!-- listing of users  ./-->
@@ -43,17 +44,20 @@
 
 <script>
   var jsonData = require('./data.json'); //getting the json data
-  const userData = jsonData.data.userData;
+  // var userData = jsonData.data.userData;
   export default {
     name: 'App',
     data() {
       return {
         activeUser: "",
+        activeItem: [],
         showScroller: false,
         activeItemIndex: null,
         myNewMessage: "",
         users: [],
-        messages: []
+        messages: [],
+        newMessageCounter: null,
+        userData: []
       }
     },
     methods: {
@@ -70,12 +74,14 @@
       },
 
       //showing the chats of the user selected
-      showChat(name, index){
+      showChat(user, index){
         this.messages = [];
         this.activeItemIndex = index;
         this.showScroller = false;
-        userData.forEach(item => {
-          if(item.name == name){
+        this.users[index].counter = 0;
+        this.userData.forEach(item => {
+          if(item.name == user.name){
+            this.activeItem = item;
             this.activeUser = item.name;
             item.messages.map(i => {
               this.messages.push({
@@ -95,13 +101,12 @@
       //adding a new message
       addMessage(){
         if(this.myNewMessage){
-          userData[this.activeItemIndex].messages.push(
+          this.userData[this.activeItemIndex].messages.push(
             {
               id: "me",
               message: this.myNewMessage
             }
           )
-          this.showChat(this.activeUser, this.activeItemIndex); //to show updated chat messages
           this.myNewMessage = ""; //empty text field
 
           //After the messages were updated - show the latest chat by scrolling to the end.
@@ -117,17 +122,55 @@
         container.scrollTop = container.scrollHeight;
       },
     },
+    watch: {
+      userData: {
+        handler(val, oldVal) {
+          this.showChat(this.activeItem, this.activeItemIndex);
+          // this.users = [];
+        //   // this.userData.forEach((element,i) => {
+        //   //   if(element.counter){
+        //   //     this.users[i].counter = element.counter;
+        //   //   }
+          
+        // });
+        },
+        deep: true
+      },
+    },
     mounted() {
-
       //setting the user name and avatar to 'users' array
-      userData.forEach(element => {
+      this.userData = jsonData.data.userData;
+      this.userData.forEach(element => {
         this.users.push({
           name: element.name,
-          avatar: element.avatar
+          avatar: element.avatar,
+          counter: element.counter
         });
       });
-      this.showChat(this.users[0].name); //show messages of the first user by default
       this.activeItemIndex = 0; //for setting the first user as active 
+      this.showChat(this.users[0], this.activeItemIndex); //show messages of the first user by default
+
+      //Adding incoming messages
+      setTimeout(() =>{
+        this.userData[2].messages.push(
+          {
+            id: "razeem",
+            message: "Hi this is Razeems new message"
+          }
+        )
+        this.users[2].counter = 1;
+        this.userData[3].messages.push(
+          {
+            id: "sunil",
+            message: "Hi this sunils new message"
+          },
+          {
+            id: "sunil",
+            message: "Hi this sunils another message"
+          }
+        )
+        this.users[3].counter = 2;
+      },5000)
     }
   }
 </script>
@@ -176,6 +219,20 @@
       color: #40c792;
       border-color: #40c792;
     }
+  }
+  .counter{
+    position: absolute;
+    right: 20px;
+    top: 27px;
+    width: 22px;
+    font-size: 12px;
+    height: 22px;
+    background: #05728f;
+    border-radius: 50%;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .chat-inside{
     min-height: 85vh;
