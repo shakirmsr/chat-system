@@ -56,7 +56,6 @@
         myNewMessage: "",
         users: [],
         messages: [],
-        newMessageCounter: null,
         userData: []
       }
     },
@@ -78,8 +77,8 @@
         this.messages = [];
         this.activeItemIndex = index;
         this.showScroller = false;
-        this.users[index].counter = 0;
-        this.userData.forEach(item => {
+        this.users[index].counter = 0; //setting counter to 0 when the user is selected
+        this.userData.forEach(item => { //updating messages array of selected user
           if(item.name == user.name){
             this.activeItem = item;
             this.activeUser = item.name;
@@ -98,7 +97,7 @@
         })
       },
 
-      //adding a new message
+      //sending a new message
       addMessage(){
         if(this.myNewMessage){
           this.userData[this.activeItemIndex].messages.push(
@@ -107,7 +106,7 @@
               message: this.myNewMessage
             }
           )
-          this.myNewMessage = ""; //empty text field
+          this.myNewMessage = ""; //reset text field
 
           //After the messages were updated - show the latest chat by scrolling to the end.
           this.$nextTick(function () {
@@ -122,17 +121,11 @@
         container.scrollTop = container.scrollHeight;
       },
     },
+
     watch: {
-      userData: {
+      userData: { //watch the changes in userData
         handler(val, oldVal) {
-          this.showChat(this.activeItem, this.activeItemIndex);
-          // this.users = [];
-        //   // this.userData.forEach((element,i) => {
-        //   //   if(element.counter){
-        //   //     this.users[i].counter = element.counter;
-        //   //   }
-          
-        // });
+          this.showChat(this.activeItem, this.activeItemIndex); //update the active user messages when userData changes
         },
         deep: true
       },

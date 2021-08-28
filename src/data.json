@@ -90,6 +90,7 @@
                     }
                 ]
             },
+            
             {
                 "name": "Sunil",
                 "avatar": "https://www.pngjoy.com/pngl/136/2750635_gray-circle-login-user-icon-png-transparent-png.png",
@@ -142,6 +143,37 @@
                     {
                         "id": "me",
                         "message": "ok please let me know once finished"
+                    }
+                ]
+            },
+            {
+                "name": "Ajay krishnan",
+                "avatar": "https://www.pngjoy.com/pngl/136/2750635_gray-circle-login-user-icon-png-transparent-png.png",
+                "counter": 0,
+                "messages": [
+                    {
+                        "id": "ajay",
+                        "message": "Hi shakir"
+                    },
+                    {
+                        "id": "me",
+                        "message": "Hello how are you"
+                    },
+                    {
+                        "id": "ajay",
+                        "message": "i'm good what about you"
+                    },
+                    {
+                        "id": "me",
+                        "message": "fine brother. Hows the job going"
+                    },
+                    {
+                        "id": "ajay",
+                        "message": "going good. Now im posted in Ernakulam"
+                    },
+                    {
+                        "id": "me",
+                        "message": "awesome"
                     }
                 ]
             }
