@@ -44,7 +44,6 @@
         activeUser: "",
         activeItem: [],
         showScroller: false,
-        activeItemIndex: null,
         myNewMessage: "",
         userList: [],
         messages: [],
@@ -72,9 +71,7 @@
       //showing the chats of the user selected
       showChat(user, index){
         this.messages = [];
-        this.activeItemIndex = index;
         this.showScroller = false;
-        this.userList[index].counter = 0; //setting counter to 0 when the user is selected
         this.userData.forEach(item => { //updating messages array of selected user
           if(item.name == user.name){
             this.activeItem = item;
