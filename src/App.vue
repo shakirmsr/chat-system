@@ -4,20 +4,10 @@
     <div class="chat-wrap">
       <div class="row chat-inside">
         <div class="col-md-4">
-          <div class="user-list">
-            <span class="user-name">Shakir</span> 
-             <!-- listing of users  -->
-            <ul>
-              <li v-for = "(user,i) in users" :key="user" @click= "showChat(user, i)" :class= "{'active': i === activeItemIndex}">
-                <img v-bind:src= "user.avatar" alt="" class="avatar">
-                <span>{{user.name}}</span>
-                <div class="counter" v-if = "user.counter">{{user.counter}}</div>
-              </li>
-            </ul>
-            <!-- listing of users  ./-->
-          </div>
+          <users :userList = "userList" :activeIndex = "activeItemIndex" @show = "showChat"></users>
         </div>
         <div class="col-md-8">
+          <!-- <messages></messages> -->
           <div class="user-messages">
             <span class="user-name green">{{activeUser}}</span>
             <div class="text-input">
@@ -43,6 +33,8 @@
 </template>
 
 <script>
+  import users from "./components/users.vue";
+  import messages from "./components/messages.vue";
   var jsonData = require('./data.json'); //getting the json data
   // var userData = jsonData.data.userData;
   export default {
@@ -54,10 +46,15 @@
         showScroller: false,
         activeItemIndex: null,
         myNewMessage: "",
-        users: [],
+        userList: [],
         messages: [],
         userData: []
       }
+    },
+
+    components: {
+      users,
+      messages
     },
     methods: {
 
@@ -77,7 +74,7 @@
         this.messages = [];
         this.activeItemIndex = index;
         this.showScroller = false;
-        this.users[index].counter = 0; //setting counter to 0 when the user is selected
+        this.userList[index].counter = 0; //setting counter to 0 when the user is selected
         this.userData.forEach(item => { //updating messages array of selected user
           if(item.name == user.name){
             this.activeItem = item;
@@ -125,23 +122,30 @@
     watch: {
       userData: { //watch the changes in userData
         handler(val, oldVal) {
+          console.log("change in parent userData");
           this.showChat(this.activeItem, this.activeItemIndex); //update the active user messages when userData changes
         },
         deep: true
       },
+      userList: { //watch the changes in userData
+        handler(val, oldVal) {
+          console.log("change in parent users");
+        },
+        deep: true
+      }
     },
     mounted() {
       //setting the user name and avatar to 'users' array
       this.userData = jsonData.data.userData;
       this.userData.forEach(element => {
-        this.users.push({
+        this.userList.push({
           name: element.name,
           avatar: element.avatar,
           counter: element.counter
         });
       });
       this.activeItemIndex = 0; //for setting the first user as active 
-      this.showChat(this.users[0], this.activeItemIndex); //show messages of the first user by default
+      this.showChat(this.userList[0], this.activeItemIndex); //show messages of the first user by default
 
       //Adding incoming messages
       setTimeout(() =>{
@@ -151,7 +155,7 @@
             message: "Hi this is Razeems new message"
           }
         )
-        this.users[2].counter = 1;
+        this.userList[2].counter = 1;
         this.userData[3].messages.push(
           {
             id: "sunil",
@@ -162,7 +166,7 @@
             message: "Hi this sunils another message"
           }
         )
-        this.users[3].counter = 2;
+        this.userList[3].counter = 2;
       },5000)
     }
   }
