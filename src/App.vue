@@ -4,28 +4,10 @@
     <div class="chat-wrap">
       <div class="row chat-inside">
         <div class="col-md-4">
-          <users :userList = "userList" :activeIndex = "activeItemIndex" @show = "showChat"></users>
+          <users :userList = "userList"></users>
         </div>
         <div class="col-md-8">
-          <!-- <messages></messages> -->
-          <div class="user-messages">
-            <span class="user-name green">{{activeUser}}</span>
-            <div class="text-input">
-              <input type="text" placeholder="Enter your message here" v-model="myNewMessage" @keyup.enter = "addMessage">
-              <button @click = "addMessage"><img src="./assets/send-chat-icon.png" alt="send-icon"></button>
-            </div>
-            <div class="message-wrapper">
-              <!-- Scroll to bottom of the chat window button -->
-              <button @click = "scrollToEnd" v-if = "showScroller" class="scroll-to-btn"></button>
-              <!-- Listing of user messages -->
-              <ul ref="container" v-on:scroll.passive="handleScroll">
-                <li v-for = "message in messages" :key="message" :class="{ 'my-chat': message.id == 'me'}">
-                  {{message.message}}
-                </li>
-              </ul>
-              <!-- Listing of user messages ./-->
-            </div>
-          </div>
+          <messages :userData = "userData" :userList = "userList"></messages>
         </div>
       </div>
     </div>
@@ -36,17 +18,11 @@
   import users from "./components/users.vue";
   import messages from "./components/messages.vue";
   var jsonData = require('./data.json'); //getting the json data
-  // var userData = jsonData.data.userData;
   export default {
     name: 'App',
     data() {
       return {
-        activeUser: "",
-        activeItem: [],
-        showScroller: false,
-        myNewMessage: "",
         userList: [],
-        messages: [],
         userData: []
       }
     },
@@ -54,82 +30,6 @@
     components: {
       users,
       messages
-    },
-    methods: {
-
-      //Hiding scroll button on reaching the bottom of chat window
-      handleScroll(){
-        var container = this.$refs.container;
-        if( container.scrollTop === (container.scrollHeight - container.offsetHeight)){
-          this.showScroller = false;
-        }
-        else{
-          this.showScroller = true;
-        }
-      },
-
-      //showing the chats of the user selected
-      showChat(user, index){
-        this.messages = [];
-        this.showScroller = false;
-        this.userData.forEach(item => { //updating messages array of selected user
-          if(item.name == user.name){
-            this.activeItem = item;
-            this.activeUser = item.name;
-            item.messages.map(i => {
-              this.messages.push({
-                id: i.id,
-                message: i.message
-              })
-            });
-          }
-        });
-
-        //After the messages were updated - show the latest chat by scrolling to the end.
-        this.$nextTick(function () {
-          this.scrollToEnd();
-        })
-      },
-
-      //sending a new message
-      addMessage(){
-        if(this.myNewMessage){
-          this.userData[this.activeItemIndex].messages.push(
-            {
-              id: "me",
-              message: this.myNewMessage
-            }
-          )
-          this.myNewMessage = ""; //reset text field
-
-          //After the messages were updated - show the latest chat by scrolling to the end.
-          this.$nextTick(function () {
-            this.scrollToEnd();
-          })
-        }
-      },
-
-      //scroll to the bottom of chat block 
-      scrollToEnd() {    	
-        const container = this.$refs.container;
-        container.scrollTop = container.scrollHeight;
-      },
-    },
-
-    watch: {
-      userData: { //watch the changes in userData
-        handler(val, oldVal) {
-          console.log("change in parent userData");
-          this.showChat(this.activeItem, this.activeItemIndex); //update the active user messages when userData changes
-        },
-        deep: true
-      },
-      userList: { //watch the changes in userData
-        handler(val, oldVal) {
-          console.log("change in parent users");
-        },
-        deep: true
-      }
     },
     mounted() {
       //setting the user name and avatar to 'users' array
@@ -141,8 +41,6 @@
           counter: element.counter
         });
       });
-      this.activeItemIndex = 0; //for setting the first user as active 
-      this.showChat(this.userList[0], this.activeItemIndex); //show messages of the first user by default
 
       //Adding incoming messages
       setTimeout(() =>{
@@ -153,6 +51,7 @@
           }
         )
         this.userList[2].counter = 1;
+        
         this.userData[3].messages.push(
           {
             id: "sunil",
