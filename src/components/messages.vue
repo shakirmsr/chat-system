@@ -95,8 +95,6 @@
 			userData: {
 				//watch the changes in userData
 				handler(val, oldVal) {
-					console.log("new user added");
-					console.log(this.newUser);
 					if (this.activeItem.length === 0 || this.newUser) {
 					// if (this.activeItem.length === 0) {
 						this.activeItem = this.userList[0]; //setting the default user message for first time
@@ -106,11 +104,6 @@
 					this.showChat(this.activeItem, this.activeItemIndex); //update the active user messages when userData changes
 				},
 				deep: true,
-			},
-			newUser: {
-				handler(){
-					console.log(this.newUser);
-				}
 			}
 		},
 

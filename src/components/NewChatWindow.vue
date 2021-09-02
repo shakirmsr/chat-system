@@ -37,8 +37,7 @@ export default {
 					messages: []
 				}
 				this.emitter.emit('addNewUser', newUserData);
-				// new bootstrap.Modal(this.$el).hide();
-				this.$refs.Close.click();
+				this.$refs.Close.click(); //to close the model on submit
 				this.newUser = "";
 			}
 		}
