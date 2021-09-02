@@ -75,6 +75,18 @@
 						id: "me",
 						message: this.myNewMessage,
 					});
+					const [ index, item, message ] = [ this.activeItemIndex, { ...this.activeItem }, this.myNewMessage ];
+					setTimeout(() => {
+						let id = item.messages.filter(m => m.id !== 'me').map(m => m.id).slice(0, 1);
+						if (! id.length) id = item.name;
+						else id = id[0];
+						this.userData[index].messages.push({
+							id,
+							message: `replying to message: "${message}"`,
+						});
+						console.log(this.activeItemIndex !== index)
+						if (this.activeItemIndex !== index) this.userList[index].counter = (this.userData[index].counter || 0) + 1
+					}, 1000);
 					this.myNewMessage = ""; //reset text field
 
 					//After the messages were updated - show the latest chat by scrolling to the end.
