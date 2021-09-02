@@ -7,7 +7,7 @@
           <users :userList = "userList"></users>
         </div>
         <div class="col-md-8">
-          <messages :userData = "userData" :userList = "userList"></messages>
+          <messages :userData = "userData" :userList = "userList" :newUser="newUser" @userAdded="newUser=false"></messages>
         </div>
       </div>
     </div>
@@ -17,13 +17,14 @@
 <script>
   import users from "./components/users.vue";
   import messages from "./components/messages.vue";
-  var jsonData = require('./data.json'); //getting the json data
+  import { data as jsonData } from './data'; //getting the json data
   export default {
     name: 'App',
     data() {
       return {
         userList: [],
-        userData: []
+        userData: [],
+        newUser: false
       }
     },
 
@@ -31,9 +32,10 @@
       users,
       messages
     },
+
     mounted() {
       //setting the user name and avatar to 'users' array
-      this.userData = jsonData.data.userData;
+      this.userData = jsonData;
       this.userData.forEach(element => {
         this.userList.push({
           name: element.name,
@@ -41,18 +43,29 @@
           counter: element.counter
         });
       });
-
+      this.emitter.on("addNewUser", data => {
+        this.newUser = true;
+        setTimeout (() => {
+          this.userData.unshift(data);
+        },200)
+        this.userList.unshift({
+          name: data.name,
+          avatar: data.avatar,
+          counter: data.counter
+        });
+			});
       //Adding incoming messages
+      // setInterval(() =>{
       setTimeout(() =>{
-        this.userData[2].messages.push(
+        this.userData.find( ({ name }) => name === 'Razeem' ).messages.push(
           {
             id: "razeem",
             message: "Hi this is Razeems new message"
           }
         )
-        this.userList[2].counter = 1;
+        this.userList.find( ({ name }) => name === 'Razeem' ).counter = 1;
         
-        this.userData[3].messages.push(
+        this.userData.find( ({ name }) => name === 'Sunil' ).messages.push(
           {
             id: "sunil",
             message: "Hi this sunils new message"
@@ -62,7 +75,7 @@
             message: "Hi this sunils another message"
           }
         )
-        this.userList[3].counter = 2;
+        this.userList.find( ({ name }) => name === 'Sunil' ).counter = 1;
       },5000)
     }
   }
@@ -77,6 +90,12 @@
   h1{
     color: #05728f;
     margin-bottom: 20px;
+  }
+  .i-type1{
+    width: 100%;
+    height: 40px;
+    padding-left: 10px;
+    border: 1px solid #dee2e6;
   }
   .scroll-to-btn{
     width: 40px;

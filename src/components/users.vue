@@ -1,7 +1,10 @@
 
 <template>
   <div class="user-list">
-    <span class="user-name">Shakir</span>
+		<div class="user-name" style="display:flex;justify-content:space-between;align-items:center;">
+			<span>Shakir</span>
+			<button @click="newChat" class="btn btn-primary rounded-circle">+</button>
+		</div>
     <!-- listing of users  -->
     <ul>
       <li
@@ -17,15 +20,21 @@
     </ul>
     <!-- listing of users  ./-->
   </div>
+	<new-chat-window v-if="show_new_chat" @close="show_new_chat=false" />
 </template>
 
 <script>
+	import NewChatWindow from './NewChatWindow.vue'
 	export default {
 		name: "users",
+		components: {
+			NewChatWindow,
+		},
 		props: ["userList"], //getting the userlist from app component
 		data() {
 			return {
-				activeItemIndex: 0
+				activeItemIndex: 0,
+				show_new_chat: false
 			}
 		},
 		watch: {
@@ -41,7 +50,15 @@
 				this.userList[i].counter = 0; //hide the counter on click
 				this.activeItemIndex = i;
 				this.emitter.emit('showMessages', {user, i}); //emit to the message component
+			},
+			newChat () {
+				this.show_new_chat = true
 			}
+		},
+		mounted() {
+			this.emitter.on("addNewUser", () => {
+				this.activeItemIndex = 0; //upon adding a new user changing active index
+			})
 		}
 	};
 </script>

@@ -23,8 +23,7 @@
 <script>
 	export default {
 		name: "messsges",
-		props: ["userData", "userList"], //getting the data from parent component
-
+		props: { newUser: Boolean, userData: Array, userList: Array }, //getting the data from parent component
 		data() {
 			return {
 				activeUser: "",
@@ -35,7 +34,6 @@
 				messages: [],
 			};
 		},
-
 		methods: {
 			//Hiding scroll button on reaching the bottom of chat window
 			handleScroll() {
@@ -60,12 +58,7 @@
 					if (item.name == user.name) {
 						this.activeItem = item;
 						this.activeUser = item.name;
-						item.messages.map((i) => {
-							this.messages.push({
-								id: i.id,
-								message: i.message,
-							});
-						});
+						this.messages.push(...item.messages);
 					}
 				});
 
@@ -102,13 +95,23 @@
 			userData: {
 				//watch the changes in userData
 				handler(val, oldVal) {
-					if (this.activeItem.length === 0) {
+					console.log("new user added");
+					console.log(this.newUser);
+					if (this.activeItem.length === 0 || this.newUser) {
+					// if (this.activeItem.length === 0) {
 						this.activeItem = this.userList[0]; //setting the default user message for first time
+						this.activeItemIndex = 0;
+						if(this.newUser) this.$emit('userAdded');
 					}
 					this.showChat(this.activeItem, this.activeItemIndex); //update the active user messages when userData changes
 				},
 				deep: true,
 			},
+			newUser: {
+				handler(){
+					console.log(this.newUser);
+				}
+			}
 		},
 
 		mounted() {
